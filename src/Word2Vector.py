@@ -19,7 +19,7 @@ class Word2Vector:
         self.test_data_path = "../dataset/testData.tsv"
         self.unlabeled_train_data_path = "../dataset/unlabeledTrainData.tsv"
         self.sample_submission_path = "../dataset/sampleSubmission.csv"
-        self.model_save_dir= "../model/"
+        self.model_save_dir= "../model"
 
     # load data
     def loadLabeledTrainData(self):
@@ -117,6 +117,7 @@ class Word2Vector:
         start = time.time()
 
         word_vectors = model.syn0
+        print "begin to clustering to gaining code book"
         kmeans_clustering = KMeans(n_clusters = num_clusters)
         idx = kmeans_clustering.fit_transform(word_vectors)
 
@@ -141,7 +142,7 @@ class Word2Vector:
         pattern = "\d+features_\d+minwords_\d+context$"
         flist = os.listdir(self.model_save_dir)
         for f in flist:
-            if os.path.isfile(f) and re.match(pattern, f):
+            if re.match(pattern, f):
                 return True, f
         return None, None
 
@@ -150,9 +151,9 @@ class Word2Vector:
     def generateWordVectorModel(self, train_review, test_review, isRecalculate=False):
         print "generating model..."
         is_model_exist, model_path = self.isModelExist()
-        if not isRecalculate and self.isModelExist():
+        if not isRecalculate and is_model_exist:
             print "finding existing model, return directily"
-            return word2vec.Word2Vec.load(model_path)
+            return word2vec.Word2Vec.load(self.model_save_dir + os.path.sep + model_path)
 
         # construct the model
         print "do not find exist model, begin to build model"
@@ -164,8 +165,12 @@ class Word2Vector:
     # convert each review to word sequence
     def convertToWordSequence(self, reviews, remove_stopwords=True):
         clean_reviews = []
+        counter = 0
         for review in reviews:
+            if counter%1000 == 0:
+                print "process {} of {}".format(counter, len(reviews))
             clean_reviews.append(self.sentenceToWordList(review, remove_stopwords))
+            counter += 1
         return clean_reviews
 
 
@@ -223,7 +228,7 @@ class Word2Vector:
 if __name__ == "__main__":
     w2v = Word2Vector()
     # load original data
-    train = word2vec.loadLabeledTrainData()
+    train = w2v.loadLabeledTrainData()
     test = w2v.loadTestData()
 
     # generate word vector model
@@ -233,11 +238,13 @@ if __name__ == "__main__":
     num_features = model.syn0.shape[1]
 
     # appraoch controller
-    vector_averaging_approach = False
+    vector_averaging_approach = True
     centroids_clustring_approach = True
 
     # clean data
+    print "convering training reviews to word sequences"
     clean_train_reviews = w2v.convertToWordSequence(train["review"])
+    print "converting testing reviews to word sequences"
     clean_test_reviews = w2v.convertToWordSequence(test["review"])
 
     # Vector Averaging Approach
