@@ -20,6 +20,7 @@ class Word2Vector:
         self.unlabeled_train_data_path = "../dataset/unlabeledTrainData.tsv"
         self.sample_submission_path = "../dataset/sampleSubmission.csv"
         self.model_save_dir= "../model"
+        self.prediction_dir="../prediction"
 
     # load data
     def loadLabeledTrainData(self):
@@ -187,9 +188,10 @@ class Word2Vector:
         print "apply model to testing data"
         result = forest.predict(testDataVecs)
 
-        print "saving result to Word2Vec_AverageVectors.csv"
         output = pd.DataFrame( data={"id":test["id"], "sentiment":result} )
-        output.to_csv("Word2Vec_AverageVectors.csv", index=False, quoting=3 )
+        saving_path = self.prediction_dir + os.path.sep + "Word2Vec_AverageVectors.csv"
+        print "saving result to " + saving_path
+        output.to_csv(saving_path, index=False, quoting=3 )
 
     # Centroids Clustering Approach
     def centroidsClustringApproach(self, clean_train_reviews, clean_test_reviews, model):
@@ -218,12 +220,10 @@ class Word2Vector:
         forest = forest.fit(train_centriods, train["sentiment"])
         print "applying model to tesing data"
         result = forest.predict(test_centriods)
-        print "saving result to createBagOfCentriods.csv"
         output = pd.DataFrame( data={"id":test["id"], "sentiment":result} )
-        output.to_csv( "BagOfCentriods.csv", index=False, quoting=3 )
-
-
-
+        saving_path = self.prediction_dir + os.path.sep + "BagOfCentriods.csv"
+        print "saving result to " + saving_path
+        output.to_csv(saving_path, index=False, quoting=3 )
 
 if __name__ == "__main__":
     w2v = Word2Vector()
