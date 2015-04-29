@@ -2,4 +2,6 @@
 *.npy
 *.model
 *.pyc
+*.csv
+*.tsv
 
