@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# encoding: utf-8
+import sys
+sys.path.insert(0, "./libs")
 import pandas as pd
 import numpy as np
 import os
@@ -21,16 +21,20 @@ class Word2Vector:
         self.sample_submission_path = "../dataset/sampleSubmission.csv"
         self.model_save_dir= "../model"
         self.prediction_dir="../prediction"
+        self.dataset_dir = "../dataset"
 
     # load data
     def loadLabeledTrainData(self):
-        print "loading labeled train data"
+        print "...loading labeled train data"
+        print "...finished"
         return pd.read_csv(self.labeled_train_data_path, header=0, delimiter="\t", quoting=3, encoding='utf-8')
     def loadUnlabeledTrainData(self):
-        print "loading unlabeled train data"
+        print "...loading unlabeled train data"
+        print "...finished"
         return pd.read_csv(self.unlabeled_train_data_path, header=0, delimiter="\t", quoting=3, encoding='utf-8')
     def loadTestData(self):
-        print "loading test data"
+        print "...loading test data"
+        print "...finished"
         return pd.read_csv(self.test_data_path, header=0, delimiter="\t", quoting=3, encoding='utf-8')
     def loadSampleSubmission(self):
         print "loading sample submission data"
@@ -168,8 +172,8 @@ class Word2Vector:
         clean_reviews = []
         counter = 0
         for review in reviews:
-            if counter%1000 == 0:
-                print "process {} of {}".format(counter, len(reviews))
+            if counter % (len(reviews) // 10)== 0:
+                print "processed {} of {}".format(counter, len(reviews))
             clean_reviews.append(self.sentenceToWordList(review, remove_stopwords))
             counter += 1
         return clean_reviews
