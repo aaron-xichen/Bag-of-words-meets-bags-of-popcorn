@@ -1,7 +1,7 @@
 import sys
 sys.path.insert(0, "./libs")
 from Word2Vector import Word2Vector
-from word2vec import Word2Vec, Sent2Vec
+from word2Vec import Word2Vec, Sent2Vec
 from sklearn.ensemble import RandomForestClassifier
 import copy
 import os
