@@ -91,7 +91,7 @@ except ImportError:
         import pyximport
         models_dir = os.path.dirname(__file__) or os.getcwd()
         pyximport.install(setup_args={"include_dirs": [models_dir, get_include()]})
-        from word2vec_inner import train_sentence_sg, train_sentence_cbow, FAST_VERSION
+        from gensim.models.word2vec_inner import train_sentence_sg, train_sentence_cbow, FAST_VERSION
     except:
         # failed... fall back to plain numpy (20-80x slower training than the above)
         FAST_VERSION = -1
