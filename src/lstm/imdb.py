@@ -112,8 +112,12 @@ def load_data(path="imdb.pkl", n_words=100000, valid_portion=0.1, maxlen=None,
 
     train_set = cPickle.load(f)
     slice_length = int(0.9*(len(train_set[0])))
+    print "slice_length:{}".format(slice_length)
     train_set = (train_set[0][:slice_length], train_set[1][:slice_length])
     test_set = (train_set[0][slice_length:], train_set[1][slice_length:])
+    print len(train_set[0])
+    print len(test_set[0])
+
     f.close()
     if maxlen:
         new_train_set_x = []
