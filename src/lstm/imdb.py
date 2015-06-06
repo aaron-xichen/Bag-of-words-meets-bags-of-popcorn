@@ -170,4 +170,5 @@ def load_data(path="imdb.pkl", n_words=100000, valid_portion=0.1, maxlen=None,
     train = (train_set_x, train_set_y)
     valid = (valid_set_x, valid_set_y)
     test = (test_set_x, test_set_y)
+    print "train: {}, valid: {}, test: {}".format(len(train_set_x), len(valid_set_x), len(test_set_x))
     return train, valid, test
