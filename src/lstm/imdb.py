@@ -111,9 +111,6 @@ def load_data(path="imdb.pkl", n_words=100000, valid_portion=0.1, maxlen=None,
         f = open(path, 'rb')
 
     train_set = cPickle.load(f)
-    slice_length = int(0.9*(len(train_set[0])))
-    test_set = (train_set[0][slice_length:], train_set[1][slice_length:])
-    train_set = (train_set[0][:slice_length], train_set[1][:slice_length])
 
     f.close()
     if maxlen:
@@ -126,8 +123,12 @@ def load_data(path="imdb.pkl", n_words=100000, valid_portion=0.1, maxlen=None,
         train_set = (new_train_set_x, new_train_set_y)
         del new_train_set_x, new_train_set_y
 
-    # split training set into validation set
+    # split training set into validation set and test set
+    slice_length = int(numpy.round(len(train_set[0])*(1. - valid_portion)))
+    test_set = (train_set[0][slice_length:], train_set[1][slice_length:])
+    train_set = (train_set[0][:slice_length], train_set[1][:slice_length])
     train_set_x, train_set_y = train_set
+
     n_samples = len(train_set_x)
     sidx = numpy.random.permutation(n_samples)
     n_train = int(numpy.round(n_samples * (1. - valid_portion)))
